@@ -11,7 +11,7 @@ Autori
 OOP haters
 - xdurkal00 Lubomir Durkac 
 - xvihond00 David Vihonsky 
-- xmihalp00 Pavol Mihalik 
+- xmihalp01 Pavol Mihalik 
 
 Licence
 -------
