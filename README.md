@@ -2,8 +2,6 @@ Prostredi
 ---------
 
 Ubuntu 64bit
-Windows 64bit
-Arch Linux 64bit
 
 Autori
 ------
