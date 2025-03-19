@@ -66,7 +66,7 @@ Dávid Vihonský:
 - 24. 4. 2025: Finalizace knihovny, opravy a optimalizace na základě profilování.
 
 Pavol Mihálik:
-- 27. 3. 2025: Návrh základního uživatelského rozhraní.
+- 27. 3. 2025: Mockup základního uživatelského rozhraní.
 - 3. 4. 2025: Implementace GUI pro základní operace.
 - 10. 4. 2025: Přidání pokročilých funkcí do GUI.
 - 17. 4. 2025: Nápověda, klávesové zkratky, první verze uživatelské dokumentace.
