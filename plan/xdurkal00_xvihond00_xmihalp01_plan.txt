@@ -1,0 +1,99 @@
+Plán projektu
+
+Do 20. 3. 2025
+- Založit a nastavit repozitář podle předepsané struktury.
+- Odevzdat plán projektu do IS VUT.
+
+Týden 1: do 27. 3. 2025
+- Implementovat a otestovat základní matematické operace (+, -, *, /).
+- Připravit základní testy a Makefile s cíli all, clean, test, doc.
+- Nastavit Doxyfile a vygenerovat první verzi dokumentace.
+- Vyzkoušet vytvořit a otestovat první verzi instalátoru pro základní funkce.
+
+Týden 2: do 3. 4. 2025
+- Implementovat pokročilé matematické funkce: faktoriál, umocňování, odmocniny a další funkci.
+- Pracovat na mockupech pro vědecký režim a další vylepšení kalkulačky.
+- Začít připravovat uživatelskou dokumentaci.
+- Testovat základní i pokročilé funkce.
+
+Týden 3: do 10. 4. 2025
+- Dokončit uživatelské rozhraní včetně klávesových zkratek a nápovědy.
+- Profilovat kód s menšími sadami dat, identifikovat úzká hrdla.
+- Dokončit mockupy.
+- Rozpracovat kapitoly uživatelské a programové dokumentace.
+
+Týden 4: do 17. 4. 2025
+- Dokončit program pro výpočet směrodatné odchylky, provést rozsáhlejší profiling (10³, 10⁶ vstupů).
+- Doladit a ověřit funkčnost instalátoru a odinstalátoru na cílovém prostředí.
+- Shromáždit a zhodnotit výsledky profilování do zprávy.
+
+Týden 5: do 24. 4. 2025
+- Opravovat chyby a provádět závěrečné testy.
+- Dokončit všechny kapitoly dokumentace včetně postupů instalace a odinstalace.
+- Připravit archivaci repozitáře s finální historií.
+
+Týden 6: do 1. 5. 2025
+- Archivovat a odevzdat kompletní projekt na server.
+- Odevzdat upravený archiv do IS VUT.
+
+Rozdělení úkolů na členy týmu
+
+Dávid Vihonský:
+- Matematická knihovna (implementace základních a pokročilých funkcí).
+- Testy knihovny (dle přístupu TDD).
+- Profilování kódu a optimalizace.
+
+Pavol Mihálik:
+- Návrh a implementace uživatelského rozhraní.
+- Klávesové zkratky, nápověda, uživatelská dokumentace.
+- Mockupy pro budoucí verzi kalkulačky.
+
+Ľubomír Durkáč:
+- Verzování: správa hlavní větve, organizace Gitu.
+- Code review: kontrola kódu od Člena1 a Člena2.
+- Sloučení kódu: odpovědnost za merge a minimalizaci konfliktů.
+- Instalátor a odinstalátor: implementace a kontrola jejich funkčnosti.
+- Podpora a pomoc s debuggingem a laděním.
+
+--------------------------------------------------------------------------------------------------------------
+
+Individuální deadliny pro jednotlivé členy
+Dávid Vihonský:
+- 27. 3. 2025: Základní matematické operace (+, -, *, /) a testy pro ně.
+- 3. 4. 2025: Pokročilé funkce (faktoriál, umocňování, odmocnina).
+- 10. 4. 2025: Pokročilé testy, doladění knihovny.
+- 17. 4. 2025: Profilování kódu na menších aj velkých sadách dat (10³, 10⁶).
+- 24. 4. 2025: Finalizace knihovny, opravy a optimalizace na základě profilování.
+
+Pavol Mihálik:
+- 27. 3. 2025: Návrh základního uživatelského rozhraní.
+- 3. 4. 2025: Implementace GUI pro základní operace.
+- 10. 4. 2025: Přidání pokročilých funkcí do GUI.
+- 17. 4. 2025: Nápověda, klávesové zkratky, první verze uživatelské dokumentace.
+- 24. 4. 2025: Finalizace GUI a dokumentace, opravy na základě testů.
+
+Ľubomír Durkáč:
+- 27. 3. 2025: První test instalátoru a odinstalátoru.
+- 3. 4. 2025: Code review, kontrola nově přidaných funkcí a jejich merge.
+- 10. 4. 2025: Další testování instalátoru, průběžné code review.
+- 17. 4. 2025: Ověření správnosti dokumentace a kontrola funkčnosti na cílovém prostředí.
+- 24. 4. 2025: Finalizace všech částí projektu, pomoc při ladění a zajištění, že celý projekt běží hladce.
+
+--------------------------------------------------------------------------------------------------------------
+Systém pro správu verzí a hosting
+- GitHub, uživatel `ivskontrola` je již přidán mezi spolupracovníky.
+
+
+Adresa repozitáře
+https://github.com/YYYYOINKER/IVS_Calculator
+
+--------------------------------------------------------------------------------------------------------------
+**Komunikační kanály a pravidla**
+- Discord server:
+  - Místnosti s deadliny pro každého člena.
+  - Role pro přehled, kdo má za co odpovědnost.
+  - Kanál s připnutými důležitými informacemi.
+- Instant messaging pro rychlou domluvu.
+- Osobní setkání:
+  - Protože bydlíme ve stejném internátu, můžeme se rychle sejít a konzultovat.
+  - Setkání plánujeme dle potřeby, minimálně však jednou týdně.
