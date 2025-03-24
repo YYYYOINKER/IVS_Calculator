@@ -27,3 +27,6 @@
 *.exe
 *.out
 *.app
+src/opengl_test
+src/calc
+src/Makefile.backup
