@@ -1,13 +1,28 @@
-# Keep existing calculator build rules (for calc.cpp)
-calc: calc.cpp
-	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+CXX = g++
+CXXFLAGS = -std=c++23 -Wall -Iinclude -Isrc -I/usr/include/freetype2
+LDFLAGS = -lGL -ldl -lglfw -lX11 -pthread -lfreetype
 
-# Add OpenGL build rules (new)
-CXXFLAGS += -std=c++17
-LDFLAGS += -lglfw -lGL
+CLANGXX = clang++
+IKOS_ANALYZE = ikos analyze
 
-opengl_test: opengl_test.cpp
-	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+SOURCES = main.cpp src/TextRenderer.cpp src/glad.c include/tiny_obj_loader.cc
+LLVM_SOURCES = main.cpp
+TARGET = cube_demo
 
-# Combined 'all' target
-all: calc opengl_test
+all: $(TARGET)
+
+$(TARGET): $(SOURCES)
+	$(CXX) $(SOURCES) -o $(TARGET) $(CXXFLAGS) $(LDFLAGS)
+
+run: $(TARGET)
+	./$(TARGET)
+
+analyze:
+	$(CLANGXX) -std=c++23 -Wall -Iinclude -Isrc -emit-llvm -c $(LLVM_SOURCES) -o main.bc
+	$(IKOS_ANALYZE) main.bc
+
+clean:
+	rm -f $(TARGET) main.bc
+
+.PHONY: all clean run analyze
+
