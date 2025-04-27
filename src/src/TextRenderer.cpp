@@ -90,6 +90,19 @@ void TextRenderer::Load(const std::string& fontPath, unsigned int fontSize) {
     FT_Done_FreeType(ft);
 }
 
+
+
+float TextRenderer::CalculateTextWidth(const std::string& text, float scale)
+{
+    float width = 0.0f;
+    for (char c : text) {
+        if (Characters.count(c)) {
+            width += (Characters[c].advance >> 6) * scale; // advance is in 1/64 pixels
+        }
+    }
+    return width;
+}
+
 void TextRenderer::RenderText(const std::string& text, float x, float y, float scale, glm::vec3 color) {
     glUseProgram(shaderID);
     glUniform3f(glGetUniformLocation(shaderID, "textColor"), color.x, color.y, color.z);
