@@ -1,0 +1,26 @@
+var searchData=
+[
+  ['calculate_0',['calculate',['../main__gui_8cpp.html#a8a40bbddbd3210ac186b7df36c9b7a73',1,'main_gui.cpp']]],
+  ['calculatetextwidth_1',['CalculateTextWidth',['../classTextRenderer.html#ab57ce03f7f45ce6b896f87a202834673',1,'TextRenderer']]],
+  ['callback_5ft_2',['callback_t',['../structtinyobj_1_1callback__t.html',1,'tinyobj::callback_t'],['../structtinyobj_1_1callback__t.html#a41323a8cf55d4ad9f8e5bd77e57e9b2d',1,'tinyobj::callback_t::callback_t()']]],
+  ['channels_3',['channels',['../main__gui_8cpp.html#a520ac0a5b63dc1daf484f96c409f992b',1,'main_gui.cpp']]],
+  ['character_4',['Character',['../structCharacter.html',1,'']]],
+  ['character_5fcallback_5',['character_callback',['../main__gui_8cpp.html#a240b59afc79fc195e075d7c763480095',1,'main_gui.cpp']]],
+  ['clamp_6',['clamp',['../structtinyobj_1_1texture__option__t.html#a55c0ce8fec97910a43606281ea7ee122',1,'tinyobj::texture_option_t::clamp'],['../glad_8h.html#a3878d3005eeb2d2ef414abc752ba3c9b',1,'clamp:&#160;glad.h']]],
+  ['clearcoat_5froughness_7',['clearcoat_roughness',['../structtinyobj_1_1material__t.html#a0856eb3210823262539af42aa2f5a63e',1,'tinyobj::material_t']]],
+  ['clearcoat_5fthickness_8',['clearcoat_thickness',['../structtinyobj_1_1material__t.html#a324dd4bb8475271e31aeb0a5959af745',1,'tinyobj::material_t']]],
+  ['color_9',['color',['../glad_8h.html#a69995a929d818b8b467d4593c24d98bc',1,'glad.h']]],
+  ['colornumber_10',['colorNumber',['../glad_8h.html#aa0cc7c98d48d41e532115fa975a55d8e',1,'glad.h']]],
+  ['colors_11',['colors',['../structtinyobj_1_1attrib__t.html#aad0a3d4f2e6f1ff89671dd3d4b2dff2e',1,'tinyobj::attrib_t']]],
+  ['colorspace_12',['colorspace',['../structtinyobj_1_1texture__option__t.html#a1181af8c61dd09fe74c0e8dfff8df804',1,'tinyobj::texture_option_t']]],
+  ['contrast_13',['contrast',['../structtinyobj_1_1texture__option__t.html#a3b81d1c299840825e6633c00ba9ee0e3',1,'tinyobj::texture_option_t']]],
+  ['coords_14',['coords',['../glad_8h.html#acdbd39c05bd58b1a6ce737d0189ee608',1,'glad.h']]],
+  ['count_15',['count',['../glad_8h.html#a4e867eee5910f6b2df6123b47ab70dae',1,'glad.h']]],
+  ['createshaderprogram_16',['createShaderProgram',['../main__gui_8cpp.html#a6e78491be99e6de9a702f2a832972705',1,'createShaderProgram(const char *vertex_path, const char *fragment_path):&#160;main_gui.cpp'],['../TextRenderer_8cpp.html#a13df2310c3f02ca4d07835b18ecc2406',1,'createShaderProgram(const char *vertexPath, const char *fragmentPath):&#160;main_gui.cpp']]],
+  ['cubemap_5floaded_17',['cubemap_loaded',['../main__gui_8cpp.html#a8a410574b05de290a0ab7d5d2d1e54c1',1,'main_gui.cpp']]],
+  ['cubemap_5floaded_5ffaces_18',['cubemap_loaded_faces',['../main__gui_8cpp.html#a2904acfbe66ebdee58c74f09cf11b417',1,'main_gui.cpp']]],
+  ['cubemap_5fready_19',['cubemap_ready',['../main__gui_8cpp.html#a796bad047b4ea9aab849e14f1aebd024',1,'main_gui.cpp']]],
+  ['cubemap_5ftexture_20',['cubemap_texture',['../main__gui_8cpp.html#af4d458534672d598bebcc013eb979024',1,'main_gui.cpp']]],
+  ['current_5finput_21',['current_input',['../main__gui_8cpp.html#a9b2bd8ea36bc4bc903339838f237e873',1,'main_gui.cpp']]],
+  ['current_5fvalue_22',['current_value',['../main__gui_8cpp.html#a5d8d0024d09463f982bd175b48ccc0f2',1,'main_gui.cpp']]]
+];

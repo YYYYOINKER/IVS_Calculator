@@ -1,1 +1,33 @@
-PLaceholder pro doxyfile
+INPUT = ./main_gui.cpp ./include ./src
+
+RECURSIVE = YES
+
+OUTPUT_DIRECTORY = ./docs
+
+PROJECT_NAME = "3D Calculator OpenGL GUI"
+
+PROJECT_NUMBER = 1.0
+
+OUTPUT_LANGUAGE = English
+
+EXTRACT_ALL = YES
+
+MARKDOWN_SUPPORT = YES
+
+GENERATE_HTML = YES
+
+GENERATE_LATEX = NO
+
+HAVE_DOT = NO
+
+FILE_PATTERNS = *.cpp *.h *.hpp
+
+SHOW_USED_FILES = YES
+
+SORT_MEMBER_DOCS = YES
+
+STRIP_FROM_PATH = ./src ./include
+
+INLINE_SOURCES = YES
+SOURCE_BROWSER = YES
+
