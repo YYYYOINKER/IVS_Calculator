@@ -1,1 +1,23 @@
-tento soubor bude obsahovat rozdil mezi planem projektu a skutecnosti
+Skutočnosť vs. Plán projektu
+
+Počas práce na projekte došlo k viacerým odchýlkam oproti pôvodnému plánu.
+
+1. Práca na GUI bola náročnejšia ako sa predpokladalo
+   - Hlavné problémy nastali pri návrhu a implementácii displeja kalkulačky.
+   - Dynamické renderovanie textúr a správne zobrazovanie vstupov v reálnom čase si vyžadovalo veľa ladenia a testovania.
+   - Rovnako aj získavanie a spracovanie vstupu od používateľa (kliknutia myšou, stlačenie kláves) bolo komplikovanejšie, než sme pôvodne odhadovali.
+   - Celkovo si vývoj GUI vyžiadal podstatne viac času ako plánované dve týždne.
+
+2. Časové problémy počas semestra
+   - V polovici práce na projekte prebiehalo viacero odovzdaní semestrálnych projektov a testov v iných predmetoch.
+   - Kvôli tomu sme mali približne týždeň a pol obmedzené možnosti venovať sa IVS projektu, čo spomalilo priebeh niektorých fáz, najmä testovanie a dokumentáciu.
+
+3. Rozdelenie práce
+   - Pôvodné rozdelenie úloh medzi členov tímu nebolo úplne ideálne.
+   - Pri riešení GUI bolo potrebné, aby na rovnakých častiach spolupracovalo viac členov, čo si vyžadovalo lepšiu koordináciu a úpravy plánov.
+
+Zhrnutie:
+
+Aj napriek problémom a časovým sklzom sme projekt dostali do funkčného stavu.  
+V závere bolo potrebné zvýšiť úsilie a pracovať intenzívnejšie, aby sme všetko stihli.  
+Veríme, že sa nám to podarilo a výsledok našej práce bude zodpovedať očakávaniam.
