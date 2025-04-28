@@ -84,6 +84,11 @@
  */
 #include "TextRenderer.h"                   // disabled for now, can be enabled for HUD text
 
+#ifndef ASSET_PATH
+#define ASSET_PATH "./"
+
+#endif // !ASSET_PATH
+
 // camera distance variables
 // radius controls current zoom, target_radius smooths the zoom animation
 static float radius = 5.0f;
@@ -827,7 +832,9 @@ void character_callback(GLFWwindow* window, unsigned int codepoint) {
     }
 }
 
-
+std::string pather(const std::string &path) {
+    return std::string(ASSET_PATH) + path;
+}
 
 
 /**
@@ -906,7 +913,7 @@ int main() {
 
     // load texture of font
     TextRenderer textRenderer(width, height);
-    textRenderer.Load("fonts/LiberationSans-Bold.ttf", 48);
+    textRenderer.Load(pather("fonts/LiberationSans-Bold.ttf"), 48);
 
     //std::string full_expression = "12 + 3 *";     // top small line
     //std::string current_value    = "36";          // bottom large line
@@ -916,10 +923,10 @@ int main() {
     glEnable(GL_DEPTH_TEST);
 
     // create shader program for the main scene
-    GLuint shader = createShaderProgram("shaders/vertex.glsl", "shaders/fragment.glsl");
+    GLuint shader = createShaderProgram(pather("shaders/vertex.glsl").c_str(), pather("shaders/fragment.glsl").c_str());
 
     // create shader program for the skybox
-    GLuint skybox_shader = createShaderProgram("shaders/skybox.vert", "shaders/skybox.frag");
+    GLuint skybox_shader = createShaderProgram(pather("shaders/skybox.vert").c_str(), pather("shaders/skybox.frag").c_str());
 
     // create vao and vbo for any debug or fallback geometry
     GLuint vao, vbo;
@@ -947,12 +954,12 @@ int main() {
 
     // load paths to all 6 skybox faces
     std::vector<std::string> faces = {
-        "textures/skybox/px.jpg", // right
-        "textures/skybox/nx.jpg", // left
-        "textures/skybox/py.jpg", // top
-        "textures/skybox/ny.jpg", // bottom
-        "textures/skybox/pz.jpg", // front
-        "textures/skybox/nz.jpg"  // back
+        pather("textures/skybox/px.jpg"), // right
+        pather("textures/skybox/nx.jpg"), // left
+        pather("textures/skybox/py.jpg"), // top
+        pather("textures/skybox/ny.jpg"), // bottom
+        pather("textures/skybox/pz.jpg"), // front
+        pather("textures/skybox/nz.jpg")  // back
     };
 
     // launch background thread to load cubemap images
@@ -1001,7 +1008,7 @@ int main() {
     stbi_image_free(data); // clean up image from RAM
 
     // load calculator 3d model (.obj) and its materials
-    Mesh calculator = load_obj_model("objects/calc.obj", "objects/");
+    Mesh calculator = load_obj_model(pather("objects/calc.obj"), pather("objects/"));
 
     // define clickable buttons in 3d space (position, size, label)
     std::vector<Button> buttons = {
