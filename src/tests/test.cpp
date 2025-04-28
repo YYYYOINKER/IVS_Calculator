@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "../include/calculator.h"
+#include "../include/mathlibrary.h"
 
 class CalculatorTest : public ::testing::Test{
 protected:
@@ -52,4 +52,9 @@ TEST_F(CalculatorTest, Root){
 	double result = calc.root(8, 3);
 	EXPECT_NEAR(2.0, result, 0.0001);
 	EXPECT_THROW(calc.root(8, 1.5), std::invalid_argument);
+}
+
+int main(int argc, char **argv){
+	::testing::InitGoogleTest(&argc, argv);
+	return RUN_ALL_TESTS();
 }
