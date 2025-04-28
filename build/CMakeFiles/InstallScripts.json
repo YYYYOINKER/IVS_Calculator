@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/durkac/IVS_Calculator/build/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

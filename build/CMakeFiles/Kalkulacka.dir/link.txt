@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/Kalkulacka.dir/link.d CMakeFiles/Kalkulacka.dir/src/include/tiny_obj_loader.cc.o CMakeFiles/Kalkulacka.dir/src/main_gui.cpp.o CMakeFiles/Kalkulacka.dir/src/src/TextRenderer.cpp.o CMakeFiles/Kalkulacka.dir/src/src/glad.c.o -o Kalkulacka  /usr/lib/libGL.so /usr/lib/libGLU.so /usr/lib/libfreetype.so -lglfw
