@@ -23,6 +23,7 @@ target_include_directories(Kalkulacka PRIVATE
 )
 
 # Link OpenGL and required libraries
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libglfw3 (>= 3.3), libglew-dev, libfreetype6, libglm-dev freeglut3-dev")
 
 # Link OpenGL
 find_package(OpenGL REQUIRED)
