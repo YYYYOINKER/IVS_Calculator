@@ -3,6 +3,8 @@ project(Kalkulacka)
 
 set(CMAKE_CXX_STANDARD 23)
 
+add_compile_definitions(INSTALL_ASSET_PATH="/usr/share/Kalkulacka/")
+
 # Add source files
 file(GLOB_RECURSE SRC_FILES
     src/*.cpp
@@ -23,7 +25,6 @@ target_include_directories(Kalkulacka PRIVATE
 )
 
 # Link OpenGL and required libraries
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libglfw3 (>= 3.3), libglew-dev, libfreetype6, libglm-dev freeglut3-dev")
 
 # Link OpenGL
 find_package(OpenGL REQUIRED)
@@ -51,6 +52,11 @@ target_link_libraries(Kalkulacka
 # Install binary
 install(TARGETS Kalkulacka DESTINATION bin)
 
+install(DIRECTORY src/shaders DESTINATION share/Kalkulacka)
+install(DIRECTORY src/fonts DESTINATION share/Kalkulacka)
+install(DIRECTORY src/objects DESTINATION share/Kalkulacka)
+install(DIRECTORY src/textures DESTINATION share/Kalkulacka)
+
 # Install assets: filter non-source files in src/
 file(GLOB_RECURSE ASSET_FILES
     RELATIVE "${CMAKE_SOURCE_DIR}/src"
@@ -74,7 +80,7 @@ set(CPACK_GENERATOR "DEB")
 set(CPACK_PACKAGE_NAME "kalkulacka")
 set(CPACK_PACKAGE_VERSION "1.0.0")
 set(CPACK_PACKAGE_CONTACT "me")
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libgl1, libglu1-mesa, freeglut3")  # or glfw3, etc.
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libgl1, libglu1-mesa, freeglut3-dev, libglfw3")  # or glfw3, etc.
 
 # List of directories to copy
 set(ASSET_DIRECTORIES 

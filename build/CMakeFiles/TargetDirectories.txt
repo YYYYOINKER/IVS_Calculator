@@ -1,9 +1,0 @@
-/home/durkac/IVS_Calculator/build/CMakeFiles/Kalkulacka.dir
-/home/durkac/IVS_Calculator/build/CMakeFiles/package.dir
-/home/durkac/IVS_Calculator/build/CMakeFiles/package_source.dir
-/home/durkac/IVS_Calculator/build/CMakeFiles/edit_cache.dir
-/home/durkac/IVS_Calculator/build/CMakeFiles/rebuild_cache.dir
-/home/durkac/IVS_Calculator/build/CMakeFiles/list_install_components.dir
-/home/durkac/IVS_Calculator/build/CMakeFiles/install.dir
-/home/durkac/IVS_Calculator/build/CMakeFiles/install/local.dir
-/home/durkac/IVS_Calculator/build/CMakeFiles/install/strip.dir
