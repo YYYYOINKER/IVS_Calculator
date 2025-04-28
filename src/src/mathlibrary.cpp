@@ -1,6 +1,6 @@
 #include "../include/mathlibrary.h"
 #include <stdexcept>
-#include <cmath>
+//#include <cmath>
 
 double Calculator::add(double a, double b){
 	return a + b;
@@ -20,10 +20,20 @@ double Calculator::div(double a, double b){
 	return a/b;
 }
 
+bool Calculator::isInteger(double a){
+    long long intPart = static_cast<long long>(a);
+
+    const double epsilon = 1e-12;
+
+    double diff = a - intPart;
+
+    return (diff < epsilon && diff > -epsilon);
+}
+
 double Calculator::fact(double a){
 	if(a < 0) throw std::invalid_argument("Factorial not defined for negative numbers");
 
-	if (floor(a) != a) throw std::invalid_argument("Factorial requires integer value");
+	if (!isInteger(a)) throw std::invalid_argument("Factorial requires integer value");
 
 	if (a == 0 || a == 1) return 1.0;
 
@@ -32,26 +42,49 @@ double Calculator::fact(double a){
 	for(double i = 2.0; i <= a; i += 1.0){
 		result *= i;
 
-		if (std::isinf(result)) throw std::overflow_error("Factorial overflow: result too large");
+		if (result > 1e308) throw std::overflow_error("Factorial overflow: result too large");
 	}
 
 	return result;
 }
 
 double Calculator::power(double a, double b){
-	if(floor(b) != b) throw std::invalid_argument("Only accepts integer values");
+    if(b == 0) return 1.0;
 
-	return pow(a, b);
+	if(!isInteger(b) || b < 0) throw std::invalid_argument("Only accepts natural exponent values");
+
+    double result = 1.0;
+
+    for(int i = 1; i <= b; i++){
+        result *= a;
+    }
+
+    return result;
 }
 
 double Calculator::root(double a, double b){
-	if(floor(b) != b) throw std::invalid_argument("Only accepts integer values");
+	if(!isInteger(b) || (b <= 0)) throw std::invalid_argument("Only accepts natural numbers");
+    if((a < 0) && (((int)b%2) == 0)) throw std::invalid_argument("Even root of negative number is invalid");
 
-	return pow(a, 1/b);
+    // Newton-Raphson method to approximate b-th root of a
+    double x = a / 2.0; // initial guess
+    const double epsilon = 1e-10;
+    const int max_iterations = 1000;
+
+    for(int i = 0; i < max_iterations; i++){
+        double prev = x;
+        x = ((b-1) * x + a / power(x, b-1)) / b;
+        if ((prev - x > -epsilon) && (prev - x < epsilon)) break;
+    }
+
+    return x;
 }
 
-int Calculator::modulo(int a, int b){
+double Calculator::modulo(double a, double b){
 	if(b == 0) throw std::runtime_error("Division by zero");
+    if(!isInteger(a) || !isInteger(b)) throw std::invalid_argument("Only accepts integer values");
+    int result = static_cast<int>(a) % static_cast<int>(b);
 
-	return a%b;
+    if(result < 0) result += std::abs(static_cast<int>(b));
+    return static_cast<double>(result);
 }
