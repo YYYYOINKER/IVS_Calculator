@@ -3,7 +3,7 @@ project(Kalkulacka)
 
 set(CMAKE_CXX_STANDARD 23)
 
-add_compile_definitions(INSTALL_ASSET_PATH="/usr/share/Kalkulacka/")
+add_compile_definitions(ASSET_PATH="/usr/share/Kalkulacka/")
 
 # Add source files
 file(GLOB_RECURSE SRC_FILES
