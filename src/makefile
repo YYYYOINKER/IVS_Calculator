@@ -1,5 +1,5 @@
 CXX := g++
-CXXFLAGS := -Wall -Wextra -Iinclude -std=c++14 -pthread
+CXXFLAGS := -Wall -Wextra -Iinclude -std=c++23 -pthread
 PROFILE_FLAGS := -g -O0 -pg
 TEST_TARGET := calculator_test
 STDDEV_TARGET := profiling
