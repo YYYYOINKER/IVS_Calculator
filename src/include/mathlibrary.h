@@ -1,6 +1,7 @@
 #ifndef CALCULATOR_H
 #define CALCULATOR_H
 
+#include <iostream>
 #include <stdexcept>
 #include <cmath>
 
@@ -12,10 +13,11 @@ class Calculator{
 		double sub(double a, double b);
 		double mul(double a, double b);
 		double div(double a, double b);
+                bool isInteger(double a);
 		double fact(double a);
 		double power(double a, double b);
 		double root(double a, double b);
-		int modulo(int a, int b);
+		double modulo(double a, double b);
 };
 
 #endif
