@@ -3,7 +3,7 @@ project(Kalkulacka)
 
 set(CMAKE_CXX_STANDARD 23)
 
-add_compile_definitions(ASSET_PATH="/usr/share/Kalkulacka/")
+add_compile_definitions(ASSET_PATH="/usr/share/${PROJECT_NAME}/")
 
 # Add source files
 file(GLOB_RECURSE SRC_FILES
@@ -15,10 +15,10 @@ file(GLOB_RECURSE SRC_FILES
 	src/src/TextRenderer.cpp
 )
 
-add_executable(Kalkulacka ${SRC_FILES})
+add_executable(${PROJECT_NAME} ${SRC_FILES})
 
-# After add_executable(Kalkulacka ${SRC_FILES})
-target_include_directories(Kalkulacka PRIVATE
+# After add_executable(${PROJECT_NAME} ${SRC_FILES})
+target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/src/include
 	/usr/include/freetype2
 	${CMAKE_SOURCE_DIR}/src/src
@@ -43,19 +43,20 @@ find_package(Freetype REQUIRED)
 # Link math library (if needed)
 
 
-target_link_libraries(Kalkulacka
+target_link_libraries(${PROJECT_NAME}
     ${OPENGL_LIBRARIES}
     ${GLFW_LIBRARIES}
     ${FREETYPE_LIBRARIES}
     glfw
 )
 # Install binary
-install(TARGETS Kalkulacka DESTINATION bin)
+install(TARGETS ${PROJECT_NAME} DESTINATION bin)
 
-install(DIRECTORY src/shaders DESTINATION share/Kalkulacka)
-install(DIRECTORY src/fonts DESTINATION share/Kalkulacka)
-install(DIRECTORY src/objects DESTINATION share/Kalkulacka)
-install(DIRECTORY src/textures DESTINATION share/Kalkulacka)
+install(DIRECTORY src/shaders DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY src/fonts DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY src/objects DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY src/textures DESTINATION share/${PROJECT_NAME})
+install(FILES ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}.desktop DESTINATION /usr/share/applications)
 
 # Install assets: filter non-source files in src/
 file(GLOB_RECURSE ASSET_FILES
@@ -70,7 +71,7 @@ foreach(f ${ASSET_FILES})
         list(APPEND FILTERED_ASSETS "${CMAKE_SOURCE_DIR}/src/${f}")
         # Also install each file preserving relative path
         get_filename_component(dir "${f}" DIRECTORY)
-        install(FILES "${CMAKE_SOURCE_DIR}/src/${f}" DESTINATION "share/Kalkulacka/assets/${dir}")
+        install(FILES "${CMAKE_SOURCE_DIR}/src/${f}" DESTINATION "share/${PROJECT_NAME}/assets/${dir}")
     endif()
 endforeach()
 
@@ -81,6 +82,7 @@ set(CPACK_PACKAGE_NAME "kalkulacka")
 set(CPACK_PACKAGE_VERSION "1.0.0")
 set(CPACK_PACKAGE_CONTACT "me")
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "libgl1, libglu1-mesa, freeglut3-dev, libglfw3")  # or glfw3, etc.
+set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_SOURCE_DIR}/postinst;")
 
 # List of directories to copy
 set(ASSET_DIRECTORIES 
@@ -92,7 +94,7 @@ set(ASSET_DIRECTORIES
 
 # Loop through and copy each directory
 foreach(ASSET_DIR ${ASSET_DIRECTORIES})
-    add_custom_command(TARGET Kalkulacka POST_BUILD
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_SOURCE_DIR}/src/${ASSET_DIR}
         ${CMAKE_BINARY_DIR}/${ASSET_DIR}
