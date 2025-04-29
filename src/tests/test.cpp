@@ -1,5 +1,15 @@
+/**
+ * @file test.cpp
+ * @brief Unit tests for Calculator class using Google Test framework
+ */
+
 #include <gtest/gtest.h>
 #include "../include/mathlibrary.h"
+
+/**
+ * @class CalculatorTest
+ * @brief Test fixture for Calculator class tests
+ */
 
 class CalculatorTest : public ::testing::Test {
 protected:
@@ -70,10 +80,13 @@ TEST_F(CalculatorTest, IsInteger) {
     EXPECT_FALSE(calc.isInteger(5.3));
     EXPECT_FALSE(calc.isInteger(-2.999));
     EXPECT_TRUE(calc.isInteger(0.0));
-    EXPECT_TRUE(calc.isInteger(1e12)); // Large integer
-    EXPECT_FALSE(calc.isInteger(1e12 + 0.0001)); // Large non-integer
+    EXPECT_TRUE(calc.isInteger(1e12));
+    EXPECT_FALSE(calc.isInteger(1e12 + 0.0001));
 }
 
+/**
+ * @brief Main function to run all tests
+ */
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
