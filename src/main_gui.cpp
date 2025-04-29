@@ -1,25 +1,37 @@
-/*
- * @mainpage 3DCalculator
- * @project 3DCalculator
- * @author Pavol Mihalik (xmihalp01 VUT FIT)
- * @file main.cpp
- * @date 2025-04-03
- * @brief core opengl rendering logic and event handling for 3d scene
+/**
+ * @mainpage 3D Calculator – OpenGL GUI
  *
- * this file contains the main rendering pipeline implementation,
- * including context setup, shader loading, draw calls, and frame updates.
- * it initializes the rendering context, loads models and textures,
- * handles user input, and updates the scene.
- * 
- * dependencies:
- * - glad: loads opengl functions
- * - glfw: handles window creation and input
- * - glm: provides matrix math for 3d transforms
- * - stb_image: loads textures into memory
- * - tinyobjloader: imports .obj model geometry
- * - textRenderer: renders 2d on-screen text (optional)
+ * @section intro Introduction
+ * This is a 3D calculator application rendered with OpenGL, designed to simulate
+ * an interactive physical calculator with mathematical input, real-time result display,
+ * and visual UI feedback. Users can interact using mouse or keyboard, zoom and rotate
+ * the view, and evaluate expressions including constants and powers.
  *
+ * @section features Features
+ * - 3D model rendering of calculator using .obj file
+ * - Interactive button system mapped to inputs
+ * - Dynamic text display using FreeType
+ * - Shader-based rendering pipeline with skybox
+ * - Simple custom math expression evaluator
+ * - Real-time user input via OpenGL + GLFW
+ *
+ * @section structure Project Structure
+ * - `main_gui.cpp` – Main application logic, rendering, input
+ * - `TextRenderer.cpp/h` – 2D text system with FreeType
+ * - `profiling.cpp` – Optional frame timing utilities (if enabled)
+ * - `shaders/` – Vertex and fragment shaders
+ * - `textures/`, `objects/` – 3D models and assets
+ *
+ * @section build How to Build
+ * ```
+ * make
+ * ./calculatorGUI
+ * ```
+ *
+ * @section author Author
+ * Pavol Mihalik (xmihalp01, VUT FIT)
  */
+
 
 
 /**
@@ -89,6 +101,8 @@
 static float radius = 5.0f;
 float target_radius = 5.0f;
 //double calculate(const std::string& expr);
+
+bool show_help_overlay = false;
 
 
 // stores the current input string from user (e.g. "6^2+3")
@@ -358,7 +372,7 @@ Mesh load_obj_model(const std::string& obj_path, const std::string& base_path) {
  * @return Evaluated result as double.
  */
 double calculate(const std::string& expr) {
-    // ⚠ WARNING: Only handles simple cases, no parentheses
+
     if (expr.empty())
         return 0.0;
 
@@ -421,6 +435,20 @@ GLuint loadCubemap(std::vector<std::string> faces) {
 
     return textureID; // return texture handle
 }
+
+float quadVertices[] = {
+    // positions    // tex coords (not used)
+    0.0f,  0.0f,   0.0f, 0.0f,
+    1.0f,  0.0f,   1.0f, 0.0f,
+    1.0f,  1.0f,   1.0f, 1.0f,
+    0.0f,  1.0f,   0.0f, 1.0f
+};
+
+unsigned int quadIndices[] = {
+    0, 1, 2,
+    2, 3, 0
+};
+
 
 
 /**
@@ -546,7 +574,7 @@ void process_input(const std::string& inputLabel) {
             just_evaluated = false;
         }
         if (full_expression == "0") {
-            full_expression.clear(); // 🛠️ fix for "0pi" bug
+            full_expression.clear();
         }
         current_input += "pi"; 
         full_expression += "pi";
@@ -852,7 +880,7 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // major version 3
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3); // minor version 3
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE); // for legacy compatibility
-
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
     // create a window sized 800x600 with title "Calculator"
     GLFWwindow* window = glfwCreateWindow(800, 600, "Calculator", nullptr, nullptr);
     if (!window) {
@@ -905,7 +933,7 @@ int main() {
 
     // load texture of font
     TextRenderer textRenderer(width, height);
-    textRenderer.Load(pather("fonts/LiberationSans-Bold.ttf"), 48);
+    textRenderer.Load(pather("fonts/LiberationSans-Bold.ttf"), 36);
 
     //std::string full_expression = "12 + 3 *";     // top small line
     //std::string current_value    = "36";          // bottom large line
@@ -919,6 +947,8 @@ int main() {
 
     // create shader program for the skybox
     GLuint skybox_shader = createShaderProgram(pather("shaders/skybox.vert").c_str(), pather("shaders/skybox.frag").c_str());
+
+    GLuint solidShader = createShaderProgram(pather("shaders/solid.vert").c_str(), pather("shaders/solid.frag").c_str());
 
     // create vao and vbo for any debug or fallback geometry
     GLuint vao, vbo;
@@ -944,6 +974,8 @@ int main() {
     glEnableVertexAttribArray(0);                      // enable attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0); // set up position only
 
+
+
     // load paths to all 6 skybox faces
     std::vector<std::string> faces = {
         pather("textures/skybox/px.jpg"), // right
@@ -966,6 +998,23 @@ int main() {
             cubemap_ready = true;
             });
 
+    GLuint quadVAO, quadVBO, quadEBO;
+    glGenVertexArrays(1, &quadVAO);
+    glGenBuffers(1, &quadVBO);
+    glGenBuffers(1, &quadEBO);
+
+    glBindVertexArray(quadVAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), quadVertices, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, quadEBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(quadIndices), quadIndices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glBindVertexArray(0);
 
     // camera rotation variables
     float yaw = 0.0f;               // current horizontal angle
@@ -1149,7 +1198,7 @@ int main() {
 
         // create view and projection matrices
         glm::mat4 view = glm::lookAt(camera_pos, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-        glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 75.0f);
         glm::mat4 model = glm::mat4(1.0f); // base model transform
         model = glm::scale(model, glm::vec3(10.0f)); // scale calculator model
 
@@ -1181,28 +1230,26 @@ int main() {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        float screen_WIDTH = 756.0f;
-        float screen_HEIGHT = 756.0f;
+        //float screen_WIDTH = 512.0f;
+        float screen_HEIGHT = 512.0f;
 
-        float margin_RIGHT = 20.0f; // pixels from right edge
-        float margin_TOP = 20.0f;   // pixels from top edge
+        float right_anchor_x = 700.0f;      // far right edge of text block
+        float left_anchor_x = 100.0f;       // far left edge of allowed text
 
-        // ---- full_expression (history) ----
-        float expr_SCALE = 2.0f;
-        float max_Expr_width = screen_WIDTH - 2 * margin_RIGHT;
+        float expr_SCALE = 1.5f;
+        float expr_line_spacing = 38.0f;
+        float max_expr_width = right_anchor_x - left_anchor_x;
 
-        std::string line1 = "";
-        std::string line2 = "";
-        std::string line3 = "";
+        std::string line1 = "", line2 = "", line3 = "";
 
         for (char c : full_expression) {
-            if (textRenderer.CalculateTextWidth(line1 + c, expr_SCALE) <= max_Expr_width) {
+            if (textRenderer.CalculateTextWidth(line1 + c, expr_SCALE) <= max_expr_width) {
                 line1 += c;
             }
-            else if (textRenderer.CalculateTextWidth(line2 + c, expr_SCALE) <= max_Expr_width) {
+            else if (textRenderer.CalculateTextWidth(line2 + c, expr_SCALE) <= max_expr_width) {
                 line2 += c;
             }
-            else if (textRenderer.CalculateTextWidth(line3 + c, expr_SCALE) <= max_Expr_width) {
+            else if (textRenderer.CalculateTextWidth(line3 + c, expr_SCALE) <= max_expr_width) {
                 line3 += c;
             }
             else {
@@ -1212,106 +1259,65 @@ int main() {
                 } else {
                     line3 = "...";
                 }
-                break; // no need to continue
+                break;
             }
         }
 
-        // Now render line1, line2, line3 separately
-
-        float exprY = screen_HEIGHT - margin_TOP + expr_SCALE * 30.0f; // top line
+        float exprY = screen_HEIGHT - 38.0f;
 
         if (!line1.empty()) {
-            float exprWidth1 = textRenderer.CalculateTextWidth(line1, expr_SCALE);
-            float exprX1 = screen_WIDTH - exprWidth1 - margin_RIGHT;
-            textRenderer.RenderText(line1, exprX1, exprY, expr_SCALE, glm::vec3(0.7f));
+            float x = right_anchor_x - textRenderer.CalculateTextWidth(line1, expr_SCALE);
+            textRenderer.RenderText(line1, x, exprY, expr_SCALE, glm::vec3(0.7f));
         }
-
         if (!line2.empty()) {
-            float exprWidth2 = textRenderer.CalculateTextWidth(line2, expr_SCALE);
-            float exprX2 = screen_WIDTH - exprWidth2 - margin_RIGHT;
-            textRenderer.RenderText(line2, exprX2, exprY - 75.0f, expr_SCALE, glm::vec3(0.7f)); // +50 for second line
+            float x = right_anchor_x - textRenderer.CalculateTextWidth(line2, expr_SCALE);
+            textRenderer.RenderText(line2, x, exprY - expr_line_spacing, expr_SCALE, glm::vec3(0.7f));
         }
-
         if (!line3.empty()) {
-            float exprWidth3 = textRenderer.CalculateTextWidth(line3, expr_SCALE);
-            float max_Expr_width = screen_WIDTH - 2 * margin_RIGHT;
-
-            if (exprWidth3 > max_Expr_width) {
-                while (textRenderer.CalculateTextWidth("..." + line3, expr_SCALE) > max_Expr_width && line3.length() > 1) {
-                    line3.erase(0, 1); // Remove characters from the start
-                }
-                line3 = "..." + line3; // Prepend "..." AFTER trimming
-                exprWidth3 = textRenderer.CalculateTextWidth(line3, expr_SCALE); // recalculate
-            }
-
-            float exprX3 = screen_WIDTH - exprWidth3 - margin_RIGHT;
-            textRenderer.RenderText(line3, exprX3, exprY - 150.0f, expr_SCALE, glm::vec3(0.7f));
+            float x = right_anchor_x - textRenderer.CalculateTextWidth(line3, expr_SCALE);
+            textRenderer.RenderText(line3, x, exprY - 2 * expr_line_spacing, expr_SCALE, glm::vec3(0.7f));
         }
 
+        // ===== Draw Result or Input =====
 
-        // --- draw current_input during typing ---
+        std::string display_value = (!current_input.empty() && !just_evaluated)
+            ? current_input
+            : current_value;
 
-        if (!current_input.empty() && !just_evaluated) {
-            float inputScale = 2.8f; // start big
-            float minInputScale = 1.2f; // minimum shrink
-            float maxInputWidth = screen_WIDTH - 2 * margin_RIGHT;
+        float value_scale = 2.8f;
+        float min_scale = 1.6f;
+        float max_value_width = right_anchor_x - left_anchor_x;
 
-            float inputWidth = textRenderer.CalculateTextWidth(current_input, inputScale);
+        float value_width = textRenderer.CalculateTextWidth(display_value, value_scale);
 
-            if (inputWidth > maxInputWidth) {
-                inputScale *= maxInputWidth / inputWidth;
-                if (inputScale < minInputScale) inputScale = minInputScale;
-            }
+        // NEW TRUNCATION AFTER SCALING
+        if (value_width > max_value_width) {
+            // scale down if needed
+            value_scale *= max_value_width / value_width;
+            if (value_scale < min_scale) value_scale = min_scale;
+            value_width = textRenderer.CalculateTextWidth(display_value, value_scale);
 
-            float inputWidthFinal = textRenderer.CalculateTextWidth(current_input, inputScale);
-            float inputX = screen_WIDTH - inputWidthFinal - margin_RIGHT;
-            float inputY = exprY - 650.0f; // same Y position as answer
+            // if still too wide, truncate characters from the left
+            if (value_width > max_value_width) {
+                bool is_negative = !display_value.empty() && display_value[0] == '-';
+                if (is_negative) display_value.erase(0, 1); // strip minus temporarily
 
-            textRenderer.RenderText(current_input, inputX, inputY, inputScale, glm::vec3(1.0f));
-        }
-        else {
-            // --- draw current_value when not typing ---
-            float base_scale = 2.8f;
-            float min_scale = 1.6f;
-            float target_scale = base_scale;
-
-            std::string display_value = current_value;
-
-            // Special handling for negatives
-            if (!display_value.empty() && display_value[0] == '-') {
-                // Keep the minus, cap rest to 15
-                if (display_value.length() > 16) {
-                    display_value = "-" + display_value.substr(1, 15);
+                while (textRenderer.CalculateTextWidth(display_value, value_scale) > max_value_width
+                        && display_value.length() > 1) {
+                    display_value.erase(0, 1);
                 }
-            } else {
-                // Normal positive numbers
-                if (display_value.length() > 16) {
-                    display_value = display_value.substr(0, 16);
-                }
+
+                display_value = "…" + display_value;
+                if (is_negative) display_value = "-" + display_value;
+
+                value_width = textRenderer.CalculateTextWidth(display_value, value_scale);
             }
-
-            size_t char_count = 0;
-            for (char c : display_value) {
-                if (c != '.' && c != '-') {
-                    ++char_count;
-                }
-            }
-
-            if (char_count > 9) {
-                target_scale = base_scale * (9.0f / static_cast<float>(char_count));
-                if (target_scale < min_scale) {
-                    target_scale = min_scale;
-                }
-            }
-
-            float value_width_final = textRenderer.CalculateTextWidth(display_value, target_scale);
-            float value_x = screen_WIDTH - value_width_final - margin_RIGHT;
-            float value_y = exprY - 650.0f;
-
-            textRenderer.RenderText(display_value, value_x, value_y, target_scale, glm::vec3(1.0f));
         }
 
+        float value_x = right_anchor_x - value_width;
+        float value_y = 60.0f;
 
+        textRenderer.RenderText(display_value, value_x, value_y, value_scale, glm::vec3(1.0f));
 
         // cleanup state
         glDisable(GL_BLEND);
@@ -1384,8 +1390,6 @@ int main() {
             glUniform3f(glGetUniformLocation(shader, "lightDir"), -0.5f, -1.0f, -0.3f);
             glUniform3f(glGetUniformLocation(shader, "lightColor"), 0.7f, 0.7f, 0.7f);
 
-            // 🌿 set green if it's the screen material, else default to white
-            // if this is the calculator screen, use dynamic texture
             if (matName == "Material.027") {
                 glBindTexture(GL_TEXTURE_2D, screen_Texture); // use rendered screen
             } else {
@@ -1499,15 +1503,136 @@ int main() {
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
 
-        glm::mat4 flippedDefault = glm::ortho(0.0f, static_cast<float>(width),
-                static_cast<float>(height), 0.0f); // flipped Y
+
+        glm::mat4 hudProjection = glm::ortho(
+                0.0f, static_cast<float>(width),
+                0.0f, static_cast<float>(height));
+
 
         glUseProgram(textRenderer.GetShaderID());
         glUniformMatrix4fv(glGetUniformLocation(textRenderer.GetShaderID(), "projection"),
-                1, GL_FALSE, glm::value_ptr(flippedDefault));
+                1, GL_FALSE, glm::value_ptr(hudProjection));
 
 
         glDepthFunc(GL_LESS); // restore default depth function
+
+
+        // Disable depth (draw on top of everything)
+        glDisable(GL_DEPTH_TEST);
+
+        // Enable blending for transparent text
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        glUseProgram(textRenderer.GetShaderID());
+        glUniformMatrix4fv(glGetUniformLocation(textRenderer.GetShaderID(), "projection"),
+                1, GL_FALSE, glm::value_ptr(hudProjection));
+
+
+        // Common button properties (for both '?' and 'X')
+        float buttonX = 20.0f;  // X position
+        float buttonY = height - 80.0f;  // Y position (from top)
+        float buttonScale = 2.0f; // Scale (size)
+
+        static bool was_pressed_2d = false;
+
+        double mouseX, mouseY;
+        glfwGetCursorPos(window, &mouseX, &mouseY);
+        float flippedY = height - mouseY; // flip Y to OpenGL coordinates
+
+        if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && !was_pressed_2d) {
+            was_pressed_2d = true;
+
+            if (show_help_overlay) {
+                // Click on 'X' to close
+                if (mouseX >= buttonX - 10 && mouseX <= buttonX + 40 &&
+                        flippedY >= buttonY - 10 && flippedY <= buttonY + 40) {
+                    show_help_overlay = false;
+                    std::cout << "Help closed via X" << std::endl;
+                }
+            } else {
+                // Click on '?' to open
+                if (mouseX >= buttonX - 10 && mouseX <= buttonX + 40 &&
+                        flippedY >= buttonY - 10 && flippedY <= buttonY + 40) {
+                    show_help_overlay = true;
+                    std::cout << "Toggled Help: ON" << std::endl;
+                }
+            }
+        } else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {
+            was_pressed_2d = false;
+        }
+
+        // During rendering
+
+        if (show_help_overlay) {
+            textRenderer.RenderText("X", buttonX, buttonY, buttonScale, glm::vec3(1.0f, 0.0f, 0.0f)); // Red X
+        } else {
+            textRenderer.RenderText("?", buttonX, buttonY, buttonScale, glm::vec3(1.0f)); // White ?
+        }
+
+
+        if (show_help_overlay) {
+            glDisable(GL_DEPTH_TEST);
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+            glm::mat4 proj = glm::ortho(0.0f, static_cast<float>(width),
+                    0.0f, static_cast<float>(height));
+
+            // Render translucent white background
+            glUseProgram(solidShader);
+            glUniformMatrix4fv(glGetUniformLocation(solidShader, "projection"), 1, GL_FALSE, glm::value_ptr(proj));
+            glUniform2f(glGetUniformLocation(solidShader, "position"), 0.0f, 0.0f);
+            glUniform2f(glGetUniformLocation(solidShader, "size"), static_cast<float>(width), static_cast<float>(height));
+            glUniform3f(glGetUniformLocation(solidShader, "color"), 0.1f, 0.1f, 0.1f); // Alpha handled in frag shader
+            glBindVertexArray(quadVAO);
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+            // Render help text
+            glUseProgram(textRenderer.GetShaderID());
+            glUniformMatrix4fv(glGetUniformLocation(textRenderer.GetShaderID(), "projection"),
+                    1, GL_FALSE, glm::value_ptr(proj));
+
+            float helpX = 40.0f;
+            float helpY = height - 60.0f;
+            float scale = 0.6f;
+            glm::vec3 textColor(0.9f, 0.9f, 0.9f);  // white text
+
+            textRenderer.RenderText("      -- HELP MODE --", helpX, helpY, scale, textColor);
+            textRenderer.RenderText("          - Click buttons or type keys to input", helpX, helpY - 40, scale, textColor);
+            textRenderer.RenderText("          - Press <del> to clear, <backspace> to clear entry", helpX, helpY - 80, scale, textColor);
+            textRenderer.RenderText("          - Mouse wheel zooms view", helpX, helpY - 120, scale, textColor);
+            textRenderer.RenderText("          - Middle mouse drag rotates model", helpX, helpY - 160, scale, textColor);
+            textRenderer.RenderText("          - Click 'X' in top-left to close this overlay", helpX, helpY - 200, scale, textColor);
+            textRenderer.RenderText("          - To use pi on keyboard - p", helpX, helpY - 240, scale, textColor);
+            textRenderer.RenderText("          - To use e on keyboard - e", helpX, helpY - 280, scale, textColor);
+            textRenderer.RenderText("          - Root on keyboard - r works like: root(number, 1/exponent)", helpX, helpY - 320, scale, textColor);
+            textRenderer.RenderText("          - Modulo on keyboard - m", helpX, helpY - 360, scale, textColor);
+            textRenderer.RenderText("          - Power on keyboard - v", helpX, helpY - 400, scale, textColor);
+
+            // Draw 'X' close button
+            textRenderer.RenderText("X", buttonX, buttonY, buttonScale, glm::vec3(1.0f, 0.0f, 0.0f));
+
+            glDisable(GL_BLEND);
+            glEnable(GL_DEPTH_TEST);
+        }
+
+
+        // Restore the normal text projection
+        glm::mat4 normalProjection = glm::ortho(
+                0.0f, static_cast<float>(width),
+                static_cast<float>(height), 0.0f
+                );
+
+        glUseProgram(textRenderer.GetShaderID());
+        glUniformMatrix4fv(glGetUniformLocation(textRenderer.GetShaderID(), "projection"),
+                1, GL_FALSE, glm::value_ptr(normalProjection));
+
+        // Restore OpenGL state
+        glDisable(GL_BLEND);
+        glEnable(GL_DEPTH_TEST);
+
+
 
         glfwSwapBuffers(window); // swap front and back buffer
         glfwPollEvents();        // handle window + input events

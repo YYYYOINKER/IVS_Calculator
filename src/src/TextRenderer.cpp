@@ -1,3 +1,11 @@
+/**
+ * @file TextRenderer.cpp
+ * @brief Implementation of text rendering using FreeType and OpenGL.
+ * 
+ * Contains functions to load fonts, generate character textures, 
+ * render strings at specified positions, and measure text widths.
+ */
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
