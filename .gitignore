@@ -30,3 +30,5 @@
 src/opengl_test
 src/calc
 src/Makefile.backup
+src/calculatorGUI
+build/

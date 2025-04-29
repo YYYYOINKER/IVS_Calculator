@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Kalkulacka
+Exec=/usr/bin/Kalkulacka
+Icon=/usr/share/textures/icon.png
+Terminal=false
+Type=Application
+Categories=Utility;
+Version=1.0
+Comment=IVS Projekt 2
