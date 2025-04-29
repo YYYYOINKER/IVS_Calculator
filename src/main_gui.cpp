@@ -999,7 +999,7 @@ int main() {
 
     // load png image from disk
     int w, h, ch;
-    unsigned char* data = stbi_load("textures/others/Baker.png", &w, &h, &ch, 0);
+    unsigned char* data = stbi_load(pather("objects/Baker.png").c_str(), &w, &h, &ch, 0);
     if (data) {
         // send image to gpu
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, (ch == 4 ? GL_RGBA : GL_RGB), GL_UNSIGNED_BYTE, data);
