@@ -69,7 +69,7 @@
  */
 #define STB_IMAGE_IMPLEMENTATION              // enables stb image function definitions
 #include "stb/stb_image.h"                    // single-header image library
-
+#include "src/pather.h"
 /**
  * @brief obj file model loader (tinyobjloader)
  *
@@ -83,11 +83,6 @@
  * renders on-screen text using freetype and opengl.
  */
 #include "TextRenderer.h"                   // disabled for now, can be enabled for HUD text
-
-#ifndef ASSET_PATH
-#define ASSET_PATH "./"
-
-#endif // !ASSET_PATH
 
 // camera distance variables
 // radius controls current zoom, target_radius smooths the zoom animation
@@ -832,9 +827,6 @@ void character_callback(GLFWwindow* window, unsigned int codepoint) {
     }
 }
 
-std::string pather(const std::string &path) {
-    return std::string(ASSET_PATH) + path;
-}
 
 
 /**
@@ -1081,7 +1073,7 @@ int main() {
 
             float scale = 1.5f;
             float centerX = width / 2.0f - 120.0f;  // Adjust this value to move the text further left
-            float centerY = height / 1.2f;
+            float centerY = height / 2.0f;
 
             // Move "Loading" a bit higher, adjust "..." and "1/6" further below "Loading"
             textRenderer.RenderText("Loading", centerX, centerY , scale, glm::vec3(1.0f));  // Moved up
@@ -1476,7 +1468,7 @@ int main() {
             cubemap_loaded = true;
             show_loading = false;
 
-            // ✅ Restore normal HUD Y projection (origin bottom-left)
+            // Restore normal HUD Y projection (origin bottom-left)
             glm::mat4 normalProj = glm::ortho(0.0f, static_cast<float>(width),
                     static_cast<float>(height), 0.0f);
             glUseProgram(textRenderer.GetShaderID());
@@ -1516,31 +1508,6 @@ int main() {
 
 
         glDepthFunc(GL_LESS); // restore default depth function
-
-        // attempt to render input over screen (not yet finished)
-        /*
-           for (const auto& sub : calculator.submeshes) {
-           if (sub.material_ID >= 0 && static_cast<size_t>(sub.material_ID) < calculator.materials.size()) {
-           const auto& mat = calculator.materials[sub.material_ID];
-           if (mat.name == "Material.027") {
-           glm::vec4 screenWorldPos = model * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-           glm::vec4 clipSpace = projection * view * screenWorldPos;
-
-           if (clipSpace.w != 0.0f) {
-           clipSpace /= clipSpace.w; // perspective divide
-
-           float x = (clipSpace.x * 0.5f + 0.5f) * width;
-           float y = (clipSpace.y * 0.5f + 0.5f) * height;
-
-        //textRenderer.RenderText(current_input, x, y, 0.8f, glm::vec3(0.0f, 0.9f, 0.1f));
-        }
-        break;
-        }
-        }
-        }
-        */
-
-        //textRenderer.RenderText(current_input, 100.0f, 60.0f, 1.0f, glm::vec3(0.0f)); // fallback text render
 
         glfwSwapBuffers(window); // swap front and back buffer
         glfwPollEvents();        // handle window + input events

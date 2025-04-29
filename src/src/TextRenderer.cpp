@@ -5,14 +5,17 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
+#include "pather.h"
 
 
 extern std::string loadShaderSource(const char* path);
 extern GLuint createShaderProgram(const char* vertexPath, const char* fragmentPath);
 
+
+
 TextRenderer::TextRenderer(unsigned int width, unsigned int height) {
     // Compile and setup the shader
-    shaderID = createShaderProgram("shaders/text.vert", "shaders/text.frag");
+    shaderID = createShaderProgram(pather("shaders/text.vert").c_str(), pather("shaders/text.frag").c_str());
 
     glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(width),
                                   static_cast<float>(height), 0.0f); // flip Y
