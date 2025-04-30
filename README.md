@@ -14,4 +14,4 @@ OOP haters
 Licence
 -------
 
-Tento program je poskytovan pod licenci GNU AGPL v3.
+Tento program je poskytovan pod licenci GNU GPL v3.
