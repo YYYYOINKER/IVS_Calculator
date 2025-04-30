@@ -74,8 +74,22 @@ doc:
 	doxygen $(DOXYFILE)
 
 # Packaging
-pack: clean
-	zip -r $(PACK_NAME) . -x "*.o" -x "*.zip" -x "gmon*.out" -x "report*.txt" -x "input*.txt" -x "docs/*"
+pack: clean doc
+	cd ..; \
+	mkdir repo; \
+	mkdir install; \
+	mkdir build; \
+	mkdir doc; \
+	mv src/docs/* doc/; \
+	cd build; \
+	cmake -DINSTALL_TYPE=app .. && cpack; \
+	cmake -DINSTALL_TYPE=stddev .. && cpack; \
+	mv *.deb ../install/; \
+	cd ../repo; \
+	git clone https://github.com/YYYYOINKER/IVS_Calculator; \
+	cd ..; \
+	zip -r xdurkal00_xmihalp01_xvihond00.zip repo/* install/* doc/*; \
+	rm -rf repo/ install/ doc/ build/
 
 help:
 	@echo "Available targets:"

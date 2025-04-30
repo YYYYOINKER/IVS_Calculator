@@ -9,12 +9,13 @@ if(INSTALL_TYPE STREQUAL "app")
 
 	# Add source files
 	file(GLOB_RECURSE SRC_FILES
-	    src/*.cpp
+	    src/main_gui.cpp
     	src/*.h
 		src/include/*.cc
 		src/include/*.h
 		src/src/glad.c
 		src/src/TextRenderer.cpp
+		src/src/mathlibrary.cpp
 	)
 
 	add_executable(${PROJECT_NAME} ${SRC_FILES})
