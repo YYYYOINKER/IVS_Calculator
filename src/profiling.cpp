@@ -6,7 +6,7 @@
  * @return Výberová smerodajná odchýlka zaokrúhlená na 4 desatinné miesta
  */
 double calculate_stddev() {
-    Calculator calc;
+ 
     double x;
     size_t N = 0;
     double sum = 0.0;
@@ -14,8 +14,8 @@ double calculate_stddev() {
     
     // Online algoritmus - počítame priebežne bez ukladania všetkých čísel
     while (std::cin >> x) {
-        sum = calc.add(sum, x);
-        sum_squares = calc.add(sum_squares, calc.mul(x, x));
+        sum = Calculator::add(sum, x);
+        sum_squares = Calculator::add(sum_squares, Calculator::mul(x, x));
         N++;
     }
     
@@ -24,13 +24,13 @@ double calculate_stddev() {
     }
     
     // Numericky stabilnejší výpočet rozptylu
-    const double mean = calc.div(sum, static_cast<double>(N));
-    const double variance = calc.div(
-        calc.sub(sum_squares, calc.mul(static_cast<double>(N), calc.mul(mean, mean))),
+    const double mean = Calculator::div(sum, static_cast<double>(N));
+    const double variance = Calculator::div(
+        Calculator::sub(sum_squares, Calculator::mul(static_cast<double>(N), Calculator::mul(mean, mean))),
         static_cast<double>(N - 1)
     );
     
-    return calc.root(variance, 2.0);
+    return Calculator::root(variance, 2.0);
 }
 
 int main() {

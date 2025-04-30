@@ -7,7 +7,7 @@ LDFLAGS = -lGL -ldl -lglfw -lX11 -pthread -lfreetype
 PROFILE_FLAGS = -g -O0 -pg
 
 TARGET = calculatorGUI
-SOURCES = main_gui.cpp src/TextRenderer.cpp src/glad.c include/tiny_obj_loader.cc
+SOURCES = main_gui.cpp src/TextRenderer.cpp src/glad.c include/tiny_obj_loader.cc src/mathlibrary.cpp
 
 TEST_TARGET = calculator_test
 TEST_SRC = tests/test.cpp
