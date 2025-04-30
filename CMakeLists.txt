@@ -110,7 +110,7 @@ elseif(INSTALL_TYPE STREQUAL "stddev")
 	set(CPACK_PACKAGE_NAME "stddev")
 	set(CPACK_PACKAGE_VERSION "1.0.0")
 	set(CPACK_PACKAGE_CONTACT "xdurkal00")
-	set(CPACK_DEBIAN_PACKAGE_DEPENDS "gprof, valgrind")
+	set(CPACK_DEBIAN_PACKAGE_DEPENDS "binutils, valgrind")
 		
 endif()
 
