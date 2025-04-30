@@ -386,21 +386,33 @@ bool isOp(char c){
  * @return Evaluated result as double.
  */
 double calculate(const std::string& expr){
+	std::cout << "evaluating expression: " << expr << std::endl;
 	std::vector<double> nums;
     std::string ops = "";
 	std::string num = "";
     size_t num_start = 0;
 
+	// split the expression into numbers and operations
     for(size_t i = 0; i < expr.size(); i++){
         if(isOp(expr[i])){
-            if(expr[i] == '-' && isOp(expr[i-1]) && expr[i-1] != '!'){
+			// handle when - follows a different operation
+            if(expr[i] == '-' && (isOp(expr[i-1]) || i == 0) && expr[i-1] != '!'){
                 continue;
             }
+			// allow all operations to directly folow factorial
             else if(expr[i-1] == '!'){
                 ops += expr[i];
                 num_start = i+1;
                 continue;
             }
+			// handle when the index of the root isn't given (defaults to 2 for the square root)
+			else if(expr[i] == 'r' && (isOp(expr[i-1]) || i == 0)){
+				nums.push_back(2);
+				ops += expr[i];
+				num_start = i+1;
+				continue;
+			}
+			// add the number before the current operation to the vector (replace pi and e with constant values)
 			num = expr.substr(num_start, i-num_start);
 			if(num.contains("pi")){
 				if(num.contains('-')){
@@ -417,22 +429,42 @@ double calculate(const std::string& expr){
 				}
 			}
 			else{
-            	nums.push_back(stod(expr.substr(num_start, i-num_start)));
+            	nums.push_back(stod(num));
 			}
 			ops += expr[i];
             num_start = i+1;
         }
     }
-
+	
+	// add the last number to the vector
     if(num_start < expr.size()){
-        nums.push_back(stod(expr.substr(num_start, expr.size()-num_start)));
+    	num = expr.substr(num_start, expr.size()-num_start);
+		if(num.contains("pi")){
+			if(num.contains('-')){
+				nums.push_back(-Calculator::pi);
+			}else{
+				nums.push_back(Calculator::pi);
+			}
+		}
+		else if(num.contains('e')){
+			if(num.contains('-')){
+				nums.push_back(-Calculator::e);
+			}else{
+				nums.push_back(Calculator::e);
+			}
+		}
+		else{
+           	nums.push_back(stod(num));
+		}
     }
 
     double op_left = 0;
     double op_right = 0;
     size_t op_index = 0;
-
+	
+	// loop until there are no more operations to do
     while(!ops.empty()){
+		// handle the factorial
         if(ops.contains('!')){
             op_index = ops.find('!', 0);
             op_left = nums[op_index];
@@ -440,6 +472,7 @@ double calculate(const std::string& expr){
             nums[op_index] = Calculator::fact(op_left);
             ops.erase(op_index,1);
         }
+		// handle the root
         else if(ops.contains('r')){
             op_index = ops.find_last_of('r');
             op_left = nums[op_index];
@@ -449,6 +482,7 @@ double calculate(const std::string& expr){
             nums.erase(nums.begin()+op_index+1);
             ops.erase(op_index,1);
         }
+		// handle exponentiation
         else if(ops.contains('^')){
             op_index = ops.find_last_of('^');
             op_left = nums[op_index];
@@ -458,6 +492,7 @@ double calculate(const std::string& expr){
             nums.erase(nums.begin()+op_index+1);
             ops.erase(op_index,1);
         }
+		// handle modulo
         else if(ops.contains('%')){
             op_index = ops.find_last_of('%');
             op_left = nums[op_index];
@@ -467,6 +502,7 @@ double calculate(const std::string& expr){
             nums.erase(nums.begin()+op_index+1);
             ops.erase(op_index,1);
         }
+		// handle division
         else if(ops.contains('/')){
             op_index = ops.find_last_of('/');
             op_left = nums[op_index];
@@ -476,6 +512,7 @@ double calculate(const std::string& expr){
             nums.erase(nums.begin()+op_index+1);
             ops.erase(op_index,1);
         }
+		// handle multiplication
         else if(ops.contains('*')){
             op_index = ops.find_last_of('*');
             op_left = nums[op_index];
@@ -485,6 +522,7 @@ double calculate(const std::string& expr){
             nums.erase(nums.begin()+op_index+1);
             ops.erase(op_index,1);
         }
+		// handle subtraction
         else if(ops.contains('-')){
             op_index = ops.find_last_of('-');
             op_left = nums[op_index];
@@ -494,6 +532,7 @@ double calculate(const std::string& expr){
             nums.erase(nums.begin()+op_index+1);
             ops.erase(op_index,1);
         }
+		// handle addition
         else if(ops.contains('+')){
             op_index = ops.find_last_of('+');
             op_left = nums[op_index];
@@ -504,6 +543,9 @@ double calculate(const std::string& expr){
             ops.erase(op_index,1);
         }
     }
+
+	std::cout << "Evaluated expression: " << nums[0] << std::endl;
+
     return nums[0];
 }
 
@@ -638,8 +680,12 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
  */
 void process_input(const std::string& inputLabel) {
 
-    static double stored_value = 0;
-    static std::string current_input = "";
+	// full exression history of operation that smller thing uop top 
+	// intpute label - incoming opeartion/number
+	// current_value = current asnwer that big number below
+	// 
+	// 
+    static std::string current_input = "" ; // 
     static std::string pending_operator = "";
     static bool just_evaluated = false;
 
@@ -653,8 +699,12 @@ void process_input(const std::string& inputLabel) {
         return;
     }
 
+	if(full_expression.empty()){
+		full_expression = "0";
+	}
+
+	// if C prrssed do things
     if (inputLabel == "C") { // Full reset
-        stored_value = 0;
         current_input.clear();
         pending_operator.clear();
         full_expression = "0";  // Set to 0, not empty
@@ -663,6 +713,7 @@ void process_input(const std::string& inputLabel) {
         return;
     }
 
+	// if CE pressed do things
     if (inputLabel == "CE") {
         if (current_value.empty()) current_value = "0"; // just to be extra safe
         full_expression = current_value; // Keep current answer
@@ -672,9 +723,9 @@ void process_input(const std::string& inputLabel) {
         return;
     }
 
+    // if pi edgacases and add pi to the mix
     if (inputLabel == "pi") {
         if (just_evaluated) {
-            stored_value = 0;
             pending_operator.clear();
             current_input.clear();
             full_expression.clear();
@@ -684,15 +735,15 @@ void process_input(const std::string& inputLabel) {
         if (full_expression == "0") {
             full_expression.clear();
         }
+        // add pi
         current_input += "pi"; 
         full_expression += "pi";
-        current_value = current_input;
+        current_value = "pi";// current vlaue = pi
         return;
     }
 
     if (inputLabel == "e") {
         if (just_evaluated) {
-            stored_value = 0;
             pending_operator.clear();
             current_input.clear();
             full_expression.clear();
@@ -708,72 +759,141 @@ void process_input(const std::string& inputLabel) {
         return;
     }
 
+	if(inputLabel == "sqrt"){
+		if(just_evaluated){
+			pending_operator.clear();
+			current_input.clear();
+			full_expression = current_value;
+			current_value.clear();
+			just_evaluated = false;
+		}
+		if(full_expression == "0"){
+			full_expression.clear();
+		}
+		full_expression += "r";
+		current_value = "0";
+		return;
+	}
 
+	if(inputLabel == "^" || inputLabel == "a^n"){
+		if(just_evaluated){
+			pending_operator.clear();
+			current_input.clear();
+			full_expression = current_value;
+			current_value.clear();
+			just_evaluated = false;
+		}
+		if(!isOp(full_expression[full_expression.size()-1]) || full_expression[full_expression.size()-1] == '!'){
+			full_expression += "^";
+			current_value = "0";
+		}
+		return;
+	}
 
-    // Allow negative number at start or after operator
-    // Allow starting a negative number at the beginning or after an operator
-    if (inputLabel == "-") {
-        if (current_input.empty()) {
-            if (full_expression.empty() || full_expression == "0" || !pending_operator.empty()) {
-                // Starting a new negative number
-                if (full_expression == "0") {
-                    full_expression.clear(); // Remove dummy zero
-                }
-                current_input += "-";
-                full_expression += "-";
-                current_value = current_input;
-                just_evaluated = false;
-                return;
-            }
-        }
-    }
+	if(inputLabel == "%"){
+		if(just_evaluated){
+			pending_operator.clear();
+			current_input.clear();
+			full_expression = current_value;
+			current_value.clear();
+			just_evaluated = false;
+		}
+		if(!isOp(full_expression[full_expression.size()-1]) || full_expression[full_expression.size()-1] == '!'){
+			full_expression += "%";
+			current_value = "0";
+		}
+		return;
+	}
 
+	if(inputLabel == "!"){
+		if(just_evaluated){
+			pending_operator.clear();
+			current_input.clear();
+			full_expression = current_value;
+			current_value.clear();
+			just_evaluated = false;
+		}
+		if(!isOp(full_expression[full_expression.size()-1]) || full_expression[full_expression.size()-1] == '!'){
+			full_expression += "!";
+			current_value = "0";
+		}
+		return;
+	}
+	
+	if(inputLabel == "-"){
+		if(just_evaluated){
+			pending_operator.clear();
+			current_input.clear();
+			full_expression = current_value;
+			current_value.clear();
+			just_evaluated = false;
+		}
+		full_expression += "-";
+		current_value = "0";
+		return;
+	}
+    
+	if(inputLabel == "+"){
+		if(just_evaluated){
+			pending_operator.clear();
+			current_input.clear();
+			full_expression = current_value;
+			current_value.clear();
+			just_evaluated = false;
+		}
+		if(!isOp(full_expression[full_expression.size()-1]) || full_expression[full_expression.size()-1] == '!'){
+			full_expression += "+";
+			current_value = "0";
+		}
+		return;
+	}
 
+	if(inputLabel == "*"){
+		if(just_evaluated){
+			pending_operator.clear();
+			current_input.clear();
+			full_expression = current_value;
+			current_value.clear();
+			just_evaluated = false;
+		}
+		if(!isOp(full_expression[full_expression.size()-1]) || full_expression[full_expression.size()-1] == '!'){
+			full_expression += "*";
+			current_value = "0";
+		}
+		return;
+	}
+
+	if(inputLabel == "/"){
+		if(just_evaluated){
+			pending_operator.clear();
+			current_input.clear();
+			full_expression = current_value;
+			current_value.clear();
+			just_evaluated = false;
+		}
+		if(!isOp(full_expression[full_expression.size()-1]) || full_expression[full_expression.size()-1] == '!'){
+			full_expression += "/";
+			current_value = "0";
+		}
+		return;
+	}
 
 
     if (inputLabel == "=") {
-        if (!pending_operator.empty() && !current_input.empty()) {
+        double evaluated_expr = 0;
+		if (!full_expression.empty()) {
             try {
-
-                std::string evaluated_input = current_input;
-                std::string real_expression;
-                for (size_t i = 0; i < evaluated_input.size(); ++i) {
-                    if (evaluated_input.substr(i,2) == "pi") {
-                        real_expression += "3.1415926535";
-                        i += 1; // skip extra character because "pi" is two letters
-                    }
-                    else if (evaluated_input[i] == 'e') {
-                        real_expression += "2.7182818284";
-                    }
-                    else {
-                        real_expression += evaluated_input[i];
-                    }
-                }
-                double right_opperand = std::stod(real_expression);
-                if (pending_operator == "+") stored_value += right_opperand;
-                else if (pending_operator == "-") stored_value -= right_opperand;
-                else if (pending_operator == "*") stored_value *= right_opperand;
-                else if (pending_operator == "/") {
-                    if (right_opperand == 0) {
-                        current_value = "ERR";
-                        return;
-                    }
-                    stored_value /= right_opperand;
-                }
+				evaluated_expr = calculate(full_expression);	
             } catch (const std::invalid_argument& e) {
                 // if user pressed weird junk, safely ignore
                 current_value = "ERR";
                 return;
             }
-            pending_operator.clear();
-            current_input.clear();
-
+            
             // Force -0 to 0
-            if (std::abs(stored_value) < 1e-8) stored_value = 0.0;
-            current_value = std::to_string(stored_value);
+            if (std::abs(evaluated_expr) < 1e-8) evaluated_expr = 0.0;
 
-
-            current_value = std::to_string(stored_value);
+			current_value = std::to_string(evaluated_expr);
             if (current_value.find('.') != std::string::npos) {
                 current_value.erase(current_value.find_last_not_of('0') + 1, std::string::npos);
                 if (current_value.back() == '.') {
@@ -781,135 +901,48 @@ void process_input(const std::string& inputLabel) {
                 }
             }
 
-            full_expression = current_value; // 🛠️ final result replaces history
             just_evaluated = true;
         }
         return;
     }
 
-    // Handle operator input
-    if (inputLabel == "+" || inputLabel == "-" || inputLabel == "*" || inputLabel == "/") {
-        if (!current_input.empty()) {
-            try {
-                std::string evaluated_input = current_input;
-                std::string real_expression;
-                for (size_t i = 0; i < evaluated_input.size(); ++i) {
-                    if (evaluated_input.substr(i,2) == "pi") {
-                        real_expression += "3.1415926535";
-                        i += 1; // skip the next character of "pi"
-                    }
-                    else if (evaluated_input[i] == 'e') {
-                        real_expression += "2.7182818284";
-                    }
-                    else {
-                        real_expression += evaluated_input[i];
-                    }
-                }
-                double right_opperand = std::stod(real_expression);
+	if(std::isdigit(inputLabel[0])){
+		if(just_evaluated){
+			pending_operator.clear();
+			current_input.clear();
+			full_expression = current_value;
+			current_value.clear();
+			just_evaluated = false;
+		}
+		if(current_value == "0"){
+			current_value.clear();
+		}
+		if(full_expression == "0"){
+			full_expression.clear();
+		}
+		full_expression += inputLabel;
+		current_value += inputLabel;
+		return;
+	}
 
-                if (pending_operator.empty()) {
-                    stored_value = right_opperand;
-                } else {
-                    if (pending_operator == "+") stored_value += right_opperand;
-                    else if (pending_operator == "-") stored_value -= right_opperand;
-                    else if (pending_operator == "*") stored_value *= right_opperand;
-                    else if (pending_operator == "/") {
-                        if (right_opperand == 0) {
-                            current_value = "ERR";
-                            return;
-                        }
-                        stored_value /= right_opperand;
-                    }
-                }
-                current_value = std::to_string(stored_value);
-                if (current_value.find('.') != std::string::npos) {
-                    current_value.erase(current_value.find_last_not_of('0') + 1, std::string::npos);
-                    if (current_value.back() == '.') {
-                        current_value.pop_back();
-                    }
-                }
-            } catch (const std::invalid_argument& e) {
-                // safe ignore
-            }
-            current_input.clear();
-        }
-
-        // ignore if last char was operator already (block ++++)
-        if (!full_expression.empty()) {
-            char last = full_expression.back();
-            if (last == '+' || last == '-' || last == '*' || last == '/')
-                return;
-        }
-
-        pending_operator = inputLabel;
-        full_expression += inputLabel;
-        just_evaluated = false;
-        return;
-    }
-
-    // Handle number input (normal numbers and dot)
-    if (std::isdigit(inputLabel[0]) || inputLabel == ".") {
-        if (just_evaluated) {
-            stored_value = 0;
-            pending_operator.clear();
-            current_input.clear();
-            full_expression.clear();
-            current_value.clear();
-            just_evaluated = false;
-        }
-
-        // 🛠️ Fix: If full_expression is "0" or "-0", replace it nicely
-        if (inputLabel == "." && (full_expression.empty() || full_expression == "0" || full_expression == "-0")) {
-            if (!current_input.empty() && current_input[0] == '-') {
-                full_expression = "-0.";
-            } else {
-                full_expression = "0.";
-            }
-        } else if (full_expression == "0" || full_expression == "-0") {
-            if (!current_input.empty() && current_input[0] == '-') {
-                full_expression = "-" + inputLabel;
-            } else {
-                full_expression = inputLabel;
-            }
-        } else {
-            full_expression += inputLabel;
-        }
-
-
-        current_input += inputLabel;
-
-        // Correctly set current_value, including any negative sign
-        try {
-            std::string evaluated_input = current_input;
-            std::string real_expression;
-            for (size_t i = 0; i < evaluated_input.size(); ++i) {
-                if (evaluated_input.substr(i,2) == "pi") {
-                    real_expression += "3.1415926535";
-                    i += 1; // skip "pi"
-                }
-                else if (evaluated_input[i] == 'e') {
-                    real_expression += "2.7182818284";
-                }
-                else {
-                    real_expression += evaluated_input[i];
-                }
-            }
-            double val = std::stod(real_expression);
-            current_value = std::to_string(val);
-
-            // trim trailing 0's nicely
-            if (current_value.find('.') != std::string::npos) {
-                current_value.erase(current_value.find_last_not_of('0') + 1, std::string::npos);
-                if (current_value.back() == '.') {
-                    current_value.pop_back();
-                }
-            }
-        } catch (...) {
-            // fallback if something explodes
-            current_value = current_input;
-        }
-
-    }
+	if(inputLabel == "."){
+		if(just_evaluated){
+			pending_operator.clear();
+			current_input.clear();
+			full_expression = current_value;
+			current_value.clear();
+			just_evaluated = false;
+		}
+		if(current_value.empty()){
+			current_value = "0";
+			full_expression += "0";
+		}
+		if(!current_value.contains('.')){
+			current_value += ".";
+			full_expression += ".";
+		}
+		return;
+	}
 
 }
 
