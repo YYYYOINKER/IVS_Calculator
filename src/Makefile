@@ -76,20 +76,22 @@ doc:
 # Packaging
 pack: clean doc
 	cd ..; \
+	mkdir xdurkal00_xmihalp01_xvihond00; \
+	cd xdurkal00_xmihalp01_xvihond00; \
 	mkdir repo; \
 	mkdir install; \
 	mkdir build; \
 	mkdir doc; \
-	mv src/docs/* doc/; \
+	mv ../src/docs/* doc/; \
 	cd build; \
-	cmake -DINSTALL_TYPE=app .. && cpack; \
-	cmake -DINSTALL_TYPE=stddev .. && cpack; \
+	cmake -DINSTALL_TYPE=app ../.. && cpack; \
+	cmake -DINSTALL_TYPE=stddev ../.. && cpack; \
 	mv *.deb ../install/; \
 	cd ../repo; \
 	git clone https://github.com/YYYYOINKER/IVS_Calculator; \
-	cd ..; \
-	zip -r xdurkal00_xmihalp01_xvihond00.zip repo/* install/* doc/*; \
-	rm -rf repo/ install/ doc/ build/
+	cd ../..; \
+	zip -r xdurkal00_xmihalp01_xvihond00.zip xdurkal00_xmihalp01_xvihond00; \
+	rm -rf xdurkal00_xmihalp01_xvihond00
 
 help:
 	@echo "Available targets:"
