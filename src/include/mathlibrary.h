@@ -13,7 +13,16 @@
  */
 class Calculator {
 	public:
-		Calculator() = default;
+		Calculator() = delete;
+		
+		/**
+		 * @brief constant value of pi
+		 */
+		static constexpr double pi = 3.1415926536;
+		/**
+		 * @brief constant value of e
+		 */
+		static constexpr double e = 2.7182818285;
 
 		/**
 		 * @brief Adds two numbers
@@ -21,7 +30,7 @@ class Calculator {
 		 * @param b Second operand
 		 * @return Sum of a and b
 		 */
-		double add(double a, double b);
+		static double add(double a, double b);
 		
 		/**
 		 * @brief Subtracts two numbers
@@ -29,7 +38,7 @@ class Calculator {
 		 * @param b Second operand
 		 * @return Difference between a and b (a - b)
 		 */
-		double sub(double a, double b);
+		static double sub(double a, double b);
 		
 		/**
 		 * @brief Multiplies two numbers
@@ -37,7 +46,7 @@ class Calculator {
 		 * @param b Second operand
 		 * @return Product of a and b
 		 */
-		double mul(double a, double b);
+		static double mul(double a, double b);
 		
 		/**
 		 * @brief Divides two numbers
@@ -46,14 +55,14 @@ class Calculator {
 		 * @return Quotient of a divided by b
 		 * @throws std::runtime_error if b is zero
 		 */
-		double div(double a, double b);
+		static double div(double a, double b);
 		
 		/**
 		 * @brief Checks if a number is effectively an integer
 		 * @param a Number to check
 		 * @return true if the number is effectively an integer, false otherwise
 		 */
-		bool isInteger(double a);
+		static bool isInteger(double a);
 		
 		/**
 		 * @brief Calculates factorial of a number
@@ -62,7 +71,7 @@ class Calculator {
 		 * @throws std::invalid_argument if a is negative or not an integer
 		 * @throws std::overflow_error if factorial result is too large
 		 */
-		double fact(double a);
+		static double fact(double a);
 		
 		/**
 		 * @brief Calculates power of a number
@@ -71,7 +80,7 @@ class Calculator {
 		 * @return a raised to the power of b
 		 * @throws std::invalid_argument if exponent is negative or not an integer
 		 */
-		double power(double a, double b);
+		static double power(double a, double b);
 		
 		/**
 		 * @brief Calculates nth root of a number
@@ -80,7 +89,7 @@ class Calculator {
 		 * @return b-th root of a
 		 * @throws std::invalid_argument if index is not a natural number or if trying to calculate even root of negative number
 		 */
-		double root(double a, double b);
+		static double root(double a, double b);
 		
 		/**
 		 * @brief Calculates modulo of two numbers
@@ -90,7 +99,7 @@ class Calculator {
 		 * @throws std::runtime_error if b is zero
 		 * @throws std::invalid_argument if either a or b is not an integer
 		 */
-		double modulo(double a, double b);
+		static double modulo(double a, double b);
 };
 
 #endif

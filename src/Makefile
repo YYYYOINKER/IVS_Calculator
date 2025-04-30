@@ -5,7 +5,7 @@ LDFLAGS = -lGL -ldl -lglfw -lX11 -pthread -lfreetype
 CLANGXX = clang++
 IKOS_ANALYZE = ikos analyze
 
-SOURCES = main_gui.cpp src/TextRenderer.cpp src/glad.c include/tiny_obj_loader.cc
+SOURCES = main_gui.cpp src/TextRenderer.cpp src/glad.c include/tiny_obj_loader.cc src/mathlibrary.cpp
 LLVM_SOURCES = main_gui.cpp
 TARGET = calculatorGUI 
 

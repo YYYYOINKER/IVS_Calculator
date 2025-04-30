@@ -95,6 +95,12 @@
  * renders on-screen text using freetype and opengl.
  */
 #include "TextRenderer.h"                   // disabled for now, can be enabled for HUD text
+/**
+ * @brief project math library
+ *
+ * mathematical library containing all calculator funcions
+ */
+#include "mathlibrary.h"
 
 // camera distance variables
 // radius controls current zoom, target_radius smooths the zoom animation
@@ -361,7 +367,15 @@ Mesh load_obj_model(const std::string& obj_path, const std::string& base_path) {
     return model;  // return the complete mesh
 }
 
-
+/**
+ * @brief checks whether the given character is a valid operation
+ *
+ * @param character to be checked
+ * @return boolean value indicating whether the given character is a valid operation
+ */
+bool isOp(char c){
+	return std::string("+-*/%^r!").contains(c);
+}
 /**
  * @brief Very basic calculator parser.
  *
@@ -371,34 +385,128 @@ Mesh load_obj_model(const std::string& obj_path, const std::string& base_path) {
  * @param expr String containing math expression (e.g., "3+5*2").
  * @return Evaluated result as double.
  */
-double calculate(const std::string& expr) {
+double calculate(const std::string& expr){
+	std::vector<double> nums;
+    std::string ops = "";
+	std::string num = "";
+    size_t num_start = 0;
 
-    if (expr.empty())
-        return 0.0;
-
-    double result = 0.0;
-    double current = 0.0;
-    char operation = '+';
-
-    for (size_t i = 0; i <= expr.size(); ++i) {
-        if (i < expr.size() && (isdigit(expr[i]) || expr[i] == '.')) {
-            current = current * 10 + (expr[i] - '0');
-        } else {
-            if (operation == '+') result += current;
-            else if (operation == '-') result -= current;
-            else if (operation == '*') result *= current;
-            else if (operation == '/') {
-                if (current == 0) throw std::runtime_error("Divide by zero");
-                result /= current;
+    for(size_t i = 0; i < expr.size(); i++){
+        if(isOp(expr[i])){
+            if(expr[i] == '-' && isOp(expr[i-1]) && expr[i-1] != '!'){
+                continue;
             }
-            if (i < expr.size())
-                operation = expr[i];
-            current = 0;
+            else if(expr[i-1] == '!'){
+                ops += expr[i];
+                num_start = i+1;
+                continue;
+            }
+			num = expr.substr(num_start, i-num_start);
+			if(num.contains("pi")){
+				if(num.contains('-')){
+					nums.push_back(-Calculator::pi);
+				}else{
+					nums.push_back(Calculator::pi);
+				}
+			}
+			else if(num.contains('e')){
+				if(num.contains('-')){
+					nums.push_back(-Calculator::e);
+				}else{
+					nums.push_back(Calculator::e);
+				}
+			}
+			else{
+            	nums.push_back(stod(expr.substr(num_start, i-num_start)));
+			}
+			ops += expr[i];
+            num_start = i+1;
         }
     }
 
-    return result;
+    if(num_start < expr.size()){
+        nums.push_back(stod(expr.substr(num_start, expr.size()-num_start)));
+    }
+
+    double op_left = 0;
+    double op_right = 0;
+    size_t op_index = 0;
+
+    while(!ops.empty()){
+        if(ops.contains('!')){
+            op_index = ops.find('!', 0);
+            op_left = nums[op_index];
+
+            nums[op_index] = Calculator::fact(op_left);
+            ops.erase(op_index,1);
+        }
+        else if(ops.contains('r')){
+            op_index = ops.find_last_of('r');
+            op_left = nums[op_index];
+            op_right = nums[op_index+1];
+
+            nums[op_index] = Calculator::root(op_right, op_left);
+            nums.erase(nums.begin()+op_index+1);
+            ops.erase(op_index,1);
+        }
+        else if(ops.contains('^')){
+            op_index = ops.find_last_of('^');
+            op_left = nums[op_index];
+            op_right = nums[op_index+1];
+
+            nums[op_index] = Calculator::power(op_left, op_right);
+            nums.erase(nums.begin()+op_index+1);
+            ops.erase(op_index,1);
+        }
+        else if(ops.contains('%')){
+            op_index = ops.find_last_of('%');
+            op_left = nums[op_index];
+            op_right = nums[op_index+1];
+
+            nums[op_index] = Calculator::modulo(op_left, op_right);
+            nums.erase(nums.begin()+op_index+1);
+            ops.erase(op_index,1);
+        }
+        else if(ops.contains('/')){
+            op_index = ops.find_last_of('/');
+            op_left = nums[op_index];
+            op_right = nums[op_index+1];
+
+            nums[op_index] = Calculator::div(op_left, op_right);
+            nums.erase(nums.begin()+op_index+1);
+            ops.erase(op_index,1);
+        }
+        else if(ops.contains('*')){
+            op_index = ops.find_last_of('*');
+            op_left = nums[op_index];
+            op_right = nums[op_index+1];
+
+            nums[op_index] = Calculator::mul(op_left, op_right);
+            nums.erase(nums.begin()+op_index+1);
+            ops.erase(op_index,1);
+        }
+        else if(ops.contains('-')){
+            op_index = ops.find_last_of('-');
+            op_left = nums[op_index];
+            op_right = nums[op_index+1];
+
+            nums[op_index] = Calculator::sub(op_left, op_right);
+            nums.erase(nums.begin()+op_index+1);
+            ops.erase(op_index,1);
+        }
+        else if(ops.contains('+')){
+            op_index = ops.find_last_of('+');
+            op_left = nums[op_index];
+            op_right = nums[op_index+1];
+
+            nums[op_index] = Calculator::add(op_left, op_right);
+            nums.erase(nums.begin()+op_index+1);
+            ops.erase(op_index,1);
+        }
+    }
+    return nums[0];
 }
+
 
 /**
  * @brief loads a cubemap from 6 image files into opengl texture
