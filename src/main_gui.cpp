@@ -968,8 +968,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
             case GLFW_KEY_DELETE:    process_input("C");  break;  // delete = C
             case GLFW_KEY_ENTER:     process_input("=");  break;
             case GLFW_KEY_R:         process_input("sqrt"); break;
-            case GLFW_KEY_LEFT_BRACKET: process_input("a^n"); break;
-            case GLFW_KEY_RIGHT_BRACKET: process_input("!"); break;
+            case GLFW_KEY_6:		 if(mods == GLFW_MOD_SHIFT) process_input("a^n"); break;
+			case GLFW_KEY_1:		 if(mods == GLFW_MOD_SHIFT) process_input("!"); break;
             case GLFW_KEY_P:         process_input("pi"); break;
             case GLFW_KEY_E:         process_input("e"); break;
             default: break;
@@ -1748,8 +1748,8 @@ int main() {
             textRenderer.RenderText("          - To use pi on keyboard - p", helpX, helpY - 240, scale, textColor);
             textRenderer.RenderText("          - To use e on keyboard - e", helpX, helpY - 280, scale, textColor);
             textRenderer.RenderText("          - Root on keyboard - r works like: root(number, 1/exponent)", helpX, helpY - 320, scale, textColor);
-            textRenderer.RenderText("          - Modulo on keyboard - m", helpX, helpY - 360, scale, textColor);
-            textRenderer.RenderText("          - Power on keyboard - v", helpX, helpY - 400, scale, textColor);
+            textRenderer.RenderText("          - Modulo on keyboard - %", helpX, helpY - 360, scale, textColor);
+            textRenderer.RenderText("          - Power on keyboard - ^", helpX, helpY - 400, scale, textColor);
 
             // Draw 'X' close button
             textRenderer.RenderText("X", buttonX, buttonY, buttonScale, glm::vec3(1.0f, 0.0f, 0.0f));
