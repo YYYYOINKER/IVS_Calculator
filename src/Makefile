@@ -89,7 +89,9 @@ pack: clean doc
 	mv *.deb ../install/; \
 	cd ../repo; \
 	git clone https://github.com/YYYYOINKER/IVS_Calculator; \
-	cd ../..; \
+	cd ..; \
+	rm -rf build/; \
+	cd ..; \
 	zip -r xdurkal00_xmihalp01_xvihond00.zip xdurkal00_xmihalp01_xvihond00; \
 	rm -rf xdurkal00_xmihalp01_xvihond00
 
