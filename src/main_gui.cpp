@@ -884,7 +884,7 @@ void process_input(const std::string& inputLabel) {
 		if (!full_expression.empty()) {
             try {
 				evaluated_expr = calculate(full_expression);	
-            } catch (const std::invalid_argument& e) {
+            } catch (...) {
                 // if user pressed weird junk, safely ignore
                 current_value = "ERR";
                 return;
@@ -1747,9 +1747,10 @@ int main() {
             textRenderer.RenderText("          - Click 'X' in top-left to close this overlay", helpX, helpY - 200, scale, textColor);
             textRenderer.RenderText("          - To use pi on keyboard - p", helpX, helpY - 240, scale, textColor);
             textRenderer.RenderText("          - To use e on keyboard - e", helpX, helpY - 280, scale, textColor);
-            textRenderer.RenderText("          - Root on keyboard - r works like: root(number, 1/exponent)", helpX, helpY - 320, scale, textColor);
+            textRenderer.RenderText("          - Root on keyboard - r", helpX, helpY - 320, scale, textColor);
             textRenderer.RenderText("          - Modulo on keyboard - %", helpX, helpY - 360, scale, textColor);
             textRenderer.RenderText("          - Power on keyboard - ^", helpX, helpY - 400, scale, textColor);
+			textRenderer.RenderText("          - Factorial on keyboard - !", helpX, helpY - 440, scale, textColor);
 
             // Draw 'X' close button
             textRenderer.RenderText("X", buttonX, buttonY, buttonScale, glm::vec3(1.0f, 0.0f, 0.0f));
